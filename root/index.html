@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Musician Practice Tool</title>
+    <script type="module" crossorigin src="/assets/index-B3glM9Ug.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClhPrICc.css">
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div class="curtain left"></div>
+      <div class="curtain right"></div>
+      <div id="splashscreen">
+        <div id="loading-text">
+          <h1>Solista Suite</h1>
+          <div id="version">v1.0</div>
+        </div>
+        <div id="loading-progress-bar">
+          <div id="loading-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile Header -->
+    <mobile-header>
+      <div id="title-wrapper">
+        <a href="./index.html"><h1>Solista Suite</h1></a>
+        <div id="version">v1.0</div>
+      </div>
+    </mobile-header>
+    <main>
+      <!-- Utilities -->
+      <section id="utilities">
+        <!-- Metronome -->
+        <div class="utility-tool" id="metronome">
+          <div class="tool-header">
+            <h2>Metronome</h2>
+          </div>
+          <div class="tool-wrapper" id="metronome-wrapper">
+            <!-- LCD-style display -->
+            <div class="lcdDisp" id="metronome-display" tabindex="0">
+              <div class="tempo-container">
+                <div class="tempo-wrapper">
+                  <div class="tempo">120</div>
+                  <div class="tempo-placeholder">~~~</div>
+                </div>
+                <div id="BPM-label">BPM</div>
+              </div>
+            </div>
+
+            <!-- Time signature dropdown -->
+            <select id="metronome-time-signature">
+              <!-- Simple meters -->
+              <option value="2/4">2/4</option>
+              <option value="3/4">3/4</option>
+              <option value="4/4" selected>4/4</option>
+              <option value="5/4">5/4</option>
+              <option value="7/4">7/4</option>
+
+              <!-- Compound meters -->
+              <option value="6/8">6/8</option>
+              <option value="9/8">9/8</option>
+              <option value="12/8">12/8</option>
+
+              <!-- Complex/odd meters -->
+              <option value="5/8">5/8</option>
+              <option value="7/8">7/8</option>
+              <option value="11/8">11/8</option>
+            </select>
+
+            <!-- Tap Tempo -->
+            <button id="metronome-tap">TAP TEMPO</button>
+          </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="utility-tool" id="timer">
+          <div class="tool-header">
+            <h2>Timer</h2>
+          </div>
+          <div class="tool-wrapper" id="timer-wrapper">
+            <div class="mode-toggle">
+              <button id="modeBtn">MODE</button>
+              <div class="indicators">
+                <div id="stopwatch-led">Stopwatch</div>
+                <div id="timer-led">Timer</div>
+              </div>
+            </div>
+            <div class="lcdDisp" id="timer-display">
+              <div id="timer-placeholder">~~:~~.~~</div>
+              <div id="timer-digits">
+                <input
+                  class="time-part"
+                  data-unit="min"
+                  value="00"
+                  inputmode="numeric"
+                  maxlength="2"
+                />:
+                <input
+                  class="time-part"
+                  data-unit="sec"
+                  value="00"
+                  inputmode="numeric"
+                  maxlength="2"
+                />.
+                <input
+                  class="time-part"
+                  data-unit="hun"
+                  value="00"
+                  inputmode="numeric"
+                  maxlength="2"
+                />
+              </div>
+            </div>
+            <div class="controls">
+              <button id="startStopBtn" style="font-size: 1rem">⏵/⏸</button>
+              <button id="resetBtn">RESET</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tuner -->
+        <div class="utility-tool" id="tuner">
+          <div class="tool-header">
+            <h2>Tuner</h2>
+          </div>
+          <div class="tool-wrapper" id="tuner-wrapper">
+            <div class="lcdDisp" id="tuner-display">
+              <div id="tuner-note-container">
+                <div id="tuner-note">
+                  -<span class="invisible-tuner-sharp">♯</span>-
+                </div>
+                <div id="tuner-note-placeholder">
+                  ~<span class="tuner-sharp">♯</span>~
+                </div>
+              </div>
+              <div id="tuner-chevron-display">
+                <span class="chev flat" id="chev-flat-1">▶</span>
+                <span class="chev flat" id="chev-flat-2">▶</span>
+                <span class="chev flat" id="chev-flat-3">▶</span>
+                <span class="chev center">⏺</span>
+                <span class="chev sharp" id="chev-sharp-3">◀</span>
+                <span class="chev sharp" id="chev-sharp-2">◀</span>
+                <span class="chev sharp" id="chev-sharp-1">◀</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fork -->
+        <div class="utility-tool" id="fork">
+          <div class="tool-header">
+            <h2>Tuning fork</h2>
+          </div>
+          <div class="tool-wrapper" id="tuning-fork-wrapper">
+            <div class="lcdDisp" id="tuning-fork-display">
+              <div id="fork-note-container">
+                <div id="fork-note">A<span class="fork-sharp">♯</span>4</div>
+                <div id="fork-note-placeholder">
+                  ~<span class="fork-sharp">♯</span>~
+                </div>
+              </div>
+              <span id="fork-freq">440.000 Hz</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Studio -->
+      <section id="studio">
+        <!-- I-O -->
+        <section id="io-selector">
+          <div>
+            <label for="inputSelect">Audio Input</label>
+            <select id="inputSelect">
+              <option value=""></option>
+            </select>
+          </div>
+
+          <div>
+            <label for="outputSelect">Audio Output</label>
+            <select id="outputSelect">
+              <option value=""></option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Rack -->
+        <section id="rack">
+          <!-- Player -->
+          <div class="rack-tool" id="player">
+            <div class="tool-header">
+              <h2>Player</h2>
+            </div>
+
+            <div class="tool-wrapper" id="rack-tool">
+              <input type="file" accept="audio/*" id="file-input" hidden />
+
+              <div class="lcdDisp active" id="player-display">
+                <div id="file-status">
+                  <span class="file-name"></span>
+                  <span class="file-duration">(--:--.--)</span>
+                </div>
+
+                <div id="playTime">
+                  <span class="time-display" id="progress-time">00:00.00</span>
+                  <span class="time-display" id="progress-time-placeholder"
+                    >~~:~~.~~</span
+                  >
+                </div>
+
+                <div id="fill-container">
+                  <div id="progress-fill"></div>
+                  <div id="loop-start-marker"></div>
+                  <div id="loop-end-marker"></div>
+                </div>
+
+                <div id="statusIndicators">
+                  <div id="playIndicator">PLAY</div>
+                  <div id="pauseIndicator">PAUSE</div>
+                  <div id="loopIndicator">LOOP</div>
+                  <div id="pitchIndicator">PITCH</div>
+                  <div id="metroIndicator">METRO</div>
+                  <div id="timerIndicator">TIMER</div>
+                  <div id="tunerIndicator">TUNER</div>
+                  <div id="forkIndicator">FORK</div>
+                </div>
+              </div>
+
+              <div id="player-controls">
+                <button id="upload-button" type="button">
+                  <img src="/img/upload.png" alt="Upload" class="upload-icon" />
+                </button>
+                <button class="player-button" id="goto-loop-start">
+                  <img
+                    src="/img/gotoStart.png"
+                    alt="Loop Start"
+                    class="button-icon"
+                  />
+                </button>
+                <button class="player-button" id="play-button">
+                  <img src="/img/play.png" alt="Play" class="button-icon" />
+                </button>
+                <button class="player-button" id="pause-button">
+                  <img src="/img/pause.png" alt="Pause" class="button-icon" />
+                </button>
+                <button class="player-button" id="stop-button">
+                  <img src="/img/stop.png" alt="Stop" class="button-icon" />
+                </button>
+                <button class="player-button" id="loop-button">
+                  <img src="/img/loop.png" alt="Loop" class="button-icon" />
+                </button>
+              </div>
+              <audio id="player-audio" hidden></audio>
+
+              <!-- Looper -->
+              <div id="looper-tool">
+                <div class="loop-input-wrapper" id="loop-input-start">
+                  Loop start
+                  <div class="lcdDisp" id="loop-start-input">
+                    <div class="time-part-container">
+                      <input
+                        class="time-part"
+                        id="loop-start-mins"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                      />
+                      <span class="time-hint">~~</span>
+                    </div>
+                    <span class="separator">:</span>
+                    <div class="time-part-container">
+                      <input
+                        class="time-part"
+                        id="loop-start-secs"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                      />
+                      <span class="time-hint">~~</span>
+                    </div>
+                    <span class="separator">.</span>
+                    <div class="time-part-container">
+                      <input
+                        class="time-part"
+                        id="loop-start-hund"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                      />
+                      <span class="time-hint">~~</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="loop-input-wrapper" id="loop-input-end">
+                  Loop end
+                  <div class="lcdDisp" id="loop-end-input">
+                    <div class="time-part-container">
+                      <input
+                        class="time-part"
+                        id="loop-end-mins"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                      />
+                      <span class="time-hint">~~</span>
+                    </div>
+                    <span class="separator">:</span>
+                    <div class="time-part-container">
+                      <input
+                        class="time-part"
+                        id="loop-end-secs"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                      />
+                      <span class="time-hint">~~</span>
+                    </div>
+                    <span class="separator">.</span>
+                    <div class="time-part-container">
+                      <input
+                        class="time-part"
+                        id="loop-end-hund"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                      />
+                      <span class="time-hint">~~</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pitch and tempo -->
+          <div class="rack-tool" id="pitchtempo">
+            <div class="tool-header">
+              <h2>Pitch / Tempo</h2>
+            </div>
+            <div class="pitch-controls">
+              <!-- Transpose -->
+              <div class="lcdDisp" id="transpose-wheel">
+                <div class="control-label">TRANSPOSE</div>
+                <div class="control-display">
+                  <div class="sign-indicator">
+                    <span class="sign-plus">+</span>
+                    <span class="sign-minus">-</span>
+                  </div>
+                  <div class="digits">
+                    <div class="active-value">0</div>
+                    <div class="placeholder">~</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tune -->
+              <div class="lcdDisp" id="tune-wheel">
+                <div class="control-label">TUNE</div>
+                <div class="control-display">
+                  <div class="sign-indicator">
+                    <span class="sign-plus">+</span>
+                    <span class="sign-minus">-</span>
+                  </div>
+                  <div class="digits">
+                    <div class="active-value">
+                      <span class="invisible-zero">0</span>0
+                    </div>
+                    <div class="placeholder">~~</div>
+                  </div>
+                  <div class="percent">%</div>
+                </div>
+              </div>
+
+              <!-- Tempo -->
+              <div class="lcdDisp" id="tempo-wheel">
+                <div class="control-label">TEMPO</div>
+                <div class="control-display">
+                  <div class="digits">
+                    <div class="active-value">100</div>
+                    <div class="placeholder">~~~</div>
+                  </div>
+                  <div class="percent">%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mixer -->
+          <div class="rack-tool" id="mixer">
+            <div class="tool-header">
+              <h2>Mixer</h2>
+            </div>
+            <div class="tool-wrapper">
+              <div class="mixer-slider-container">
+                <label for="player-vol">Player</label>
+                <input
+                  type="range"
+                  id="player-vol"
+                  class="mixer-slider"
+                  min="0"
+                  max="100"
+                  value="75"
+                />
+
+                <label for="metro-vol">Metronome</label>
+                <input
+                  type="range"
+                  id="metro-vol"
+                  class="mixer-slider"
+                  min="0"
+                  max="100"
+                  value="50"
+                />
+
+                <label for="fork-vol">Tuning fork</label>
+                <input
+                  type="range"
+                  id="fork-vol"
+                  class="mixer-slider"
+                  min="0"
+                  max="100"
+                  value="25"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- Mobile Footer -->
+      <mobile-footer>© Shone207 2025</mobile-footer>
+
+      <!-- Viewer -->
+      <section id="viewer">
+        <header>
+          <div id="title-wrapper">
+            <a href="./index.html"><h1>Solista Suite</h1></a>
+            <div id="version">v1.0</div>
+          </div>
+          <menu>
+            <button>PDF</button>
+            <button>Image</button>
+            <button>Notepad</button>
+            <button>YouTube</button>
+            <button id="clear-tab">Clear tab</button>
+            <button id="focus-mode">Focus</button>
+          </menu>
+        </header>
+        <div id="viewer-content"></div>
+        <footer>© Shone207 2025</footer>
+      </section>
+    </main>
+
+    <!-- Main JS entry point -->
+
+    <script src="/src/IOselector.js"></script>
+    <script src="/src/loadingScreen.js"></script>
+  </body>
+</html>
